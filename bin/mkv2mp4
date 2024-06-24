@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+
+# ---   *   ---   *   ---
+# deps
+
+  use v5.36.0;
+  use strict;
+  use warnings;
+
+# ---   *   ---   *   ---
+# errchk
+
+my $name=shift @ARGV;
+
+die "Bad filename\n"
+
+unless
+
+   defined $name
+&& length $name
+&& -f $name
+;
+
+# ---   *   ---   *   ---
+# out is name minus ext
+
+my $out=$name;
+$out=~ s[ (?: \.[\w\d]+) $ ][]sxmg;
+
+# ---   *   ---   *   ---
+# ask bash pwetty pwease!
+
+my @call=(
+
+  qw(ffmpeg -i),
+  $name,
+
+  qw(-codec copy),
+  $out.q[.mp4]
+
+);
+
+system {$call[0]} @call;
+
+# ---   *   ---   *   ---

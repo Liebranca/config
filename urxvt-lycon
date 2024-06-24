@@ -1,0 +1,129 @@
+#!/usr/bin/perl
+# ---   *   ---   *   ---
+# deps
+
+use v5.36.0;
+use strict;
+use warnings;
+
+use Readonly;
+
+# ---   *   ---   *   ---
+# ROM
+
+  Readonly my $ROOT   => qr{^lycon:};
+
+  Readonly my $ZOOM   => qr{
+    ^zoom(in|out)$
+
+  }x;
+
+  Readonly my $SCROLL => qr{
+    ^(pageup|pagedown)$
+
+  }x;
+
+# ---   *   ---   *   ---
+# GBL
+
+my $font  = "lycon";
+my $level = 0;
+my $base  = 24;
+
+my @scr   = ();
+scrget();
+
+# ---   *   ---   *   ---
+# recalc screen size
+
+sub scrget {
+  @scr=split m[\s+],`stty size`;
+
+};
+
+# ---   *   ---   *   ---
+# crux
+
+sub on_user_command {
+
+  my ($self,$cmd) = @_;
+
+  $cmd=~ s[$ROOT][];
+
+  if($cmd=~ $ZOOM) {
+    zoom($self,$cmd);
+
+  } elsif($cmd=~ $SCROLL) {
+    scroll($self,$cmd);
+
+  };
+
+};
+
+# ---   *   ---   *   ---
+# make font bigger or smaller
+
+sub zoom($self,$cmd) {
+
+  if ($cmd eq 'zoomin') {
+    $level += 4*($level < 64);
+
+  } elsif ($cmd eq 'zoomout') {
+    $level -= 4*($level > -23);
+
+  };
+
+  my $size = $base+$level;
+  my $aa   = ($size >= $base)
+    ? 'false'
+    : 'true'
+    ;
+
+  my $paste=
+
+    "xft:${font}:"
+
+  . "pixelsize=${size}:"
+  . "antialias=$aa:"
+  . "autohint=$aa"
+  . "\007"
+
+  ;
+
+  $self->cmd_parse(
+
+    "\033]50;$paste"
+  . "\033]51;$paste"
+
+  . "\033[8;0;0t"
+
+  );
+
+  my $wid = $self->parent;
+  my $err = `wmctrl -i -r $wid -e 1,0,0`;
+
+  scrget();
+
+};
+
+# ---   *   ---   *   ---
+# go up or down a page
+
+sub scroll($self,$cmd) {
+
+  my $me = "\033]720";
+
+  if($cmd eq 'pageup') {
+    $me="\033]720";
+
+
+  } elsif($cmd eq 'pagedown') {
+    $me="\033]721";
+
+  };
+
+  $self->cmd_parse("$me;$scr[0]\007");
+
+};
+
+# ---   *   ---   *   ---

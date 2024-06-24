@@ -1,0 +1,57 @@
+*color0: [98]#000020
+*color1: [100]#7F0000
+*color2: [100]#208020
+*color3: [100]#D09820
+*color4: [100]#0060B0
+*color5: [100]#400040
+*color6: [100]#008080
+*color7: [100]#B8B8B8
+*color8: [100]#000080
+*color9: [100]#A01020
+*color10: [100]#40AE40
+*color11: [100]#B0B000
+*color12: [100]#0040B0
+*color13: [100]#8000A0
+*color14: [100]#00A0A0
+*color15: [100]#B0A060
+
+XTerm*font: *lycon*
+XTerm*font1: *lycon*
+XTerm*font2: *lycon*
+XTerm*font3: *lycon*
+XTerm*font4: *lycon*
+XTerm*font5: *lycon*
+XTerm*font6: *lycon*
+XTerm*faceName: lycon
+XTerm*faceSize: 18
+XTerm*allowBoldFonts: False
+
+URxvt.font: xft:lycon:pixelsize=24:antialias=false:autohint=false
+URxvt.boldFont:
+URxvt.scrollBar: False
+
+URxvt.iso14755: False
+URxvt.iso14755_52: False
+
+URxvt.perl-ext-common: lycon
+
+URxvt.keysym.C-minus: perl:lycon:zoomout
+URxvt.keysym.C-plus: perl:lycon:zoomin
+
+URxvt.keysym.Shift-Page_Up: command:\000
+URxvt.keysym.Shift-Page_Down: command:\000
+
+URxvt.secondaryScroll: False
+
+URxvt.keysym.C-Page_Up: perl:lycon:pageup
+URxvt.keysym.C-Page_Down: perl:lycon:pagedown
+
+URxvt.keysym.C-Up: command:\033]720;1\007
+URxvt.keysym.C-Down: command:\033]721;1\007
+
+URxvt.depth: 16
+URxvt.background: [92]#000000
+
+*background: #000000
+*foreground: #B8B8B8
+*cursorColor: #D0A020

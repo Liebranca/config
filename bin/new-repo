@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+# deps
+  use strict;
+  use warnings;
+
+# ---   *   ---   *   ---
+
+my $name=shift;
+my $desc=shift;
+
+if(! $name) {
+  print "Usage: new-repo <name>\n";
+  exit;
+
+};
+
+`gh repo create $name --public -l "GPL-3.0"`;

@@ -1,0 +1,42 @@
+#!/usr/bin/perl
+
+# ---   *   ---   *   ---
+
+  use v5.36.0;
+  use strict;
+  use warnings;
+
+# ---   *   ---   *   ---
+
+if(@ARGV) {
+
+  my @ar=(
+    '-b -nf -s -un -fs -ovr -ni',
+    '-- mpv','-wid WID'
+
+  );
+
+  my $tab={
+
+    xloop => '--loop-playlist=inf --shuffle --scale=ewa_lanczossharp --speed=1.5',
+    loop  => '--loop-playlist=inf',
+    strm  => q[--ytdl-format="best[width<=720]"],
+
+  };
+
+  while(@ARGV && exists $tab->{$ARGV[0]}) {
+
+    my $c    = shift @ARGV;
+    my $flag = $tab->{$c};
+
+    push @ar,$flag;
+
+  };
+
+  push @ar,@ARGV;
+  `xwinwrap @ar`;
+
+} else {
+  print "No input!"
+
+};

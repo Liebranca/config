@@ -1,0 +1,8 @@
+#!/bin/sh
+# This script disables all the text output for Wine
+# debugging for improved performance.
+
+export WINEDEBUG=fixme-all,err-all,warn-all,trace-all
+PROGRAM_DIR=/path/to/program/
+cd "${PROGRAM_DIR}"
+wine program.exe
