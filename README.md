@@ -35,3 +35,5 @@ A collection of little configuration files for external tools we like to use. It
 
   - `winex`, a little template for running __absolutely proprietary__ software. A sad thing to do, but sometimes there's no other choice.
 
+  - `living_dpy` and `fix640` for de-effing the screen after monitor or resolution swap.
+

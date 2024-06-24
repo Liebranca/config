@@ -13,30 +13,6 @@ package rt_temp;
   use English qw(-no_match_vars);
 
 # ---   *   ---   *   ---
-# hehe!
-
-sub bk {
-
-  state $re   = qr{^\.};
-
-  state @bks  = grep {
-    ! ($ARG=~ $re)
-
-  } split "\n",`ls -FBR1 ~/mf`;
-
-  state $bk_i = 0;
-  state $bk_t = 0;
-  state $bk_f = 1;
-
-  $bk_t++;
-  $bk_i+=1; #!($bk_t%$bk_f);
-  $bk_i*=$bk_i<@bks;
-
-  return '~/mf/'.$bks[$bk_i];
-
-};
-
-# ---   *   ---   *   ---
 # get temps
 
 sub cpu {

@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+my $modeline=(split "\n",`cvt 1366 768 59.79`)[1];
+$modeline=~ s/(\d)_60\.00/${1}/;
+$modeline=~ s/Modeline\s//;
+$modeline=~ s/\s+/ /g;
+
+$modeline=~ m/\"(.*)\"/;
+if(!$1) {exit;};
+
+my $modename=$1;
+
+`xrandr --newmode $modeline`;
+`xrandr --addmode DisplayPort-0 $modename`;
+`xrandr --output DisplayPort-0 --mode $modename`;
+
+`xwallpaper --focus ~/Cruelty/wall0.jpg`;
