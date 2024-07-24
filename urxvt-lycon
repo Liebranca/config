@@ -11,52 +11,104 @@ use Readonly;
 # ---   *   ---   *   ---
 # ROM
 
-  Readonly my $ROOT   => qr{^lycon:};
-
-  Readonly my $ZOOM   => qr{
-    ^zoom(in|out)$
-
-  }x;
-
-  Readonly my $SCROLL => qr{
-    ^(pageup|pagedown)$
-
-  }x;
+  Readonly my $ROOT=>qr{^lycon:};
 
 # ---   *   ---   *   ---
 # GBL
 
-my $font  = "lycon";
-my $level = 0;
-my $base  = 24;
+my $Font  = "lycon";
+my $Level = 0;
+my $Base  = 24;
+my $Ftog  = 0;
 
-my @scr   = ();
+my @Scr   = ();
 scrget();
 
 # ---   *   ---   *   ---
 # recalc screen size
 
 sub scrget {
-  @scr=split m[\s+],`stty size`;
+  @Scr=split m[\s+],`stty size`;
 
 };
+
+# ---   *   ---   *   ---
+# nit
+
+sub on_start {
+
+  my ($self) = @_;
+
+
+  # this is hacky, but there doesn't
+  # seem to be an event after
+  # window creation
+  $self->{timer}=urxvt::timer->new;
+  $self->{timer}->after(0.1)->cb(
+    sub {fullscreen($self)}
+
+  );
+
+  return;
+}
 
 # ---   *   ---   *   ---
 # crux
 
 sub on_user_command {
 
-  my ($self,$cmd) = @_;
 
-  $cmd=~ s[$ROOT][];
+  state $tab={
 
-  if($cmd=~ $ZOOM) {
-    zoom($self,$cmd);
+    fullscreen => \&fullscreen,
 
-  } elsif($cmd=~ $SCROLL) {
-    scroll($self,$cmd);
+    zoomin     => \&zoom,
+    zoomout    => \&zoom,
+
+    pageup     => \&scroll,
+    pagedown   => \&scroll,
 
   };
+
+  my ($self,$cmd) = @_;
+  $cmd=~ s[$ROOT][];
+
+  my $fn=$tab->{$cmd};
+  $fn->($self,$cmd) if defined $fn;
+
+
+  return;
+
+
+};
+
+# ---   *   ---   *   ---
+# selfex
+
+sub fullscreen($self,@slurp) {
+
+
+  if(exists $self->{timer}) {
+
+    my $wid = $self->parent;
+    my $err = `wmctrl -i -r $wid -b add,fullscreen`;
+
+    warn "Error maximizing: $err\n" unless $? == 0;
+    $self->{timer}->stop;
+
+    delete $self->{timer};
+
+    $Ftog |= 1;
+
+
+  } else {
+    `wmctrl -r :ACTIVE: -b toggle,fullscreen`;
+    $Ftog ^= 1;
+
+  };
+
+
+  return;
 
 };
 
@@ -66,22 +118,22 @@ sub on_user_command {
 sub zoom($self,$cmd) {
 
   if ($cmd eq 'zoomin') {
-    $level += 4*($level < 64);
+    $Level += 4*($Level < 64);
 
   } elsif ($cmd eq 'zoomout') {
-    $level -= 4*($level > -23);
+    $Level -= 4*($Level > -23);
 
   };
 
-  my $size = $base+$level;
-  my $aa   = ($size >= $base)
+  my $size = $Base+$Level;
+  my $aa   = ($size >= $Base)
     ? 'false'
     : 'true'
     ;
 
   my $paste=
 
-    "xft:${font}:"
+    "xft:${Font}:"
 
   . "pixelsize=${size}:"
   . "antialias=$aa:"
@@ -100,9 +152,18 @@ sub zoom($self,$cmd) {
   );
 
   my $wid = $self->parent;
-  my $err = `wmctrl -i -r $wid -e 1,0,0`;
+#  my $err = `wmctrl -i -r $wid -e 1,0,0`;
+
+
+  if($Ftog) {
+    fullscreen($self);
+    fullscreen($self);
+
+  };
+
 
   scrget();
+  return;
 
 };
 
@@ -122,7 +183,10 @@ sub scroll($self,$cmd) {
 
   };
 
-  $self->cmd_parse("$me;$scr[0]\007");
+  $self->cmd_parse("$me;$Scr[0]\007");
+
+
+  return;
 
 };
 

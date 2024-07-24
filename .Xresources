@@ -37,6 +37,7 @@ URxvt.perl-ext-common: lycon
 
 URxvt.keysym.C-minus: perl:lycon:zoomout
 URxvt.keysym.C-plus: perl:lycon:zoomin
+URxvt.keysym.C-backslash: perl:lycon:fullscreen
 
 URxvt.keysym.Shift-Page_Up: command:\000
 URxvt.keysym.Shift-Page_Down: command:\000
@@ -49,8 +50,8 @@ URxvt.keysym.C-Page_Down: perl:lycon:pagedown
 URxvt.keysym.C-Up: command:\033]720;1\007
 URxvt.keysym.C-Down: command:\033]721;1\007
 
-URxvt.depth: 16
-URxvt.background: [92]#000000
+URxvt.depth: 32
+URxvt.background: [82]#000008
 
 *background: #000000
 *foreground: #B8B8B8

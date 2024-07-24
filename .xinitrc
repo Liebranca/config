@@ -1,9 +1,9 @@
 xset r rate 180 30
 xrdb ~/.Xresources
 setxkbmap -layout es
-xmodmap $ARPATH/config/xlycon
+xmodmap xlycon
 
-xwallpaper --zoom ~/wallpaper.jpg
+xwallpaper --zoom ~/Cruelty/wall2.jpg
 exec ~/bin/rt/rt.pl &
 exec xbanish -t 1 &
 
